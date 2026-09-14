@@ -17,10 +17,6 @@ type NetworkState struct {
 	Signal            int
 }
 
-func run(cmd string, args ...string) string {
-	out, _ := exec.Command(cmd, args...).CombinedOutput()
-	return string(out)
-}
 
 func GetCurrentNetworkState() NetworkState {
 
@@ -312,5 +308,3 @@ func DiagnoseWiFi() {
 	fmt.Println("Summary:")
 	fmt.Println("WiFi association, IP assignment, routing, internet connectivity and DNS resolution are all functioning correctly.")
 }
-
-
