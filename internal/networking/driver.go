@@ -6,7 +6,6 @@ import (
 	"strings"
 )
 
-
 type DriverState struct {
 	HardwarePresent bool
 	DriverBound     bool
@@ -20,7 +19,6 @@ type DriverState struct {
 	PCIeFatal       bool
 	PCIeCorrectable bool
 }
-
 
 func GetDriverState() DriverState {
 

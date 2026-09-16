@@ -22,19 +22,12 @@ func GetCurrentNetworkState() NetworkState {
 
 	var state NetworkState
 
-	//-----------------------------------
-	// WiFi Connection
-	//-----------------------------------
 
 	link := run("iw", "dev", "wlan0", "link")
 
 	if strings.Contains(link, "Connected to") {
 		state.Connected = true
 	}
-
-	//-----------------------------------
-	// Signal Strength
-	//-----------------------------------
 
 	re := regexp.MustCompile(`signal:\s*(-?\d+)`)
 	match := re.FindStringSubmatch(link)
@@ -185,10 +178,6 @@ func DiagnoseWiFi() {
 		return
 	}
 
-	//---------------------------------------------------
-	// NO IP
-	//---------------------------------------------------
-
 	if !state.IPAssigned {
 
 		fmt.Println("=== Diagnosis ===")
@@ -205,10 +194,6 @@ func DiagnoseWiFi() {
 		return
 	}
 
-	//---------------------------------------------------
-	// NO ROUTE
-	//---------------------------------------------------
-
 	if !state.DefaultRoute {
 
 		fmt.Println("=== Diagnosis ===")
@@ -223,10 +208,6 @@ func DiagnoseWiFi() {
 
 		return
 	}
-
-	//---------------------------------------------------
-	// INTERNET FAILURE
-	//---------------------------------------------------
 
 	if !state.InternetReachable {
 

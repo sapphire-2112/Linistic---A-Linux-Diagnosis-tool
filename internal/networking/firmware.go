@@ -32,9 +32,6 @@ func AnalyzeFirmware() []FirmwareFinding {
 
 		l := strings.ToLower(line)
 
-		//------------------------------------------------
-		// FAILURES
-		//------------------------------------------------
 
 		if strings.Contains(l, "failed to load firmware") {
 

@@ -117,6 +117,30 @@ func Correlate() Diagnosis {
 		}
 	}
 
+	dhcp := GetDHCPState()
+
+	if dhcp.TimeoutDetected {
+		return Diagnosis{
+			Issue:      "DHCP Timeout",
+			Confidence: "High",
+			Reasoning: []string{
+				"DHCP requests timed out",
+				"No response received from DHCP server",
+			},
+		}
+	}
+
+	if dhcp.LeaseFailure {
+		return Diagnosis{
+			Issue:      "DHCP Lease Failure",
+			Confidence: "High",
+			Reasoning: []string{
+				"WiFi association successful",
+				"DHCP lease could not be obtained",
+			},
+		}
+	}
+
 	if !net.IPAssigned {
 		return Diagnosis{
 			Issue:      "No IP Address",
@@ -136,6 +160,38 @@ func Correlate() Diagnosis {
 			Reasoning: []string{
 				"IP address assigned",
 				"No default route configured",
+			},
+		}
+	}
+
+	arp := GetARPState()
+
+	if !arp.GatewayFound {
+		return Diagnosis{
+			Issue:      "No Default Gateway",
+			Confidence: "High",
+			Reasoning: []string{
+				"No gateway found in ARP table",
+			},
+		}
+	}
+
+	if arp.Failed {
+		return Diagnosis{
+			Issue:      "Gateway Unreachable",
+			Confidence: "High",
+			Reasoning: []string{
+				"ARP resolution to gateway failed",
+			},
+		}
+	}
+
+	if arp.Incomplete {
+		return Diagnosis{
+			Issue:      "ARP Resolution Failure",
+			Confidence: "High",
+			Reasoning: []string{
+				"Gateway MAC address could not be resolved",
 			},
 		}
 	}
@@ -174,6 +230,17 @@ func Correlate() Diagnosis {
 		}
 	}
 
+	if dhcp.ExcessiveRenewals {
+		return Diagnosis{
+			Issue:      "Frequent DHCP Renewals Detected",
+			Confidence: "Low",
+			Reasoning: []string{
+				"Connection is working",
+				"DHCP lease is renewing unusually often",
+			},
+		}
+	}
+
 	if driver.PCIeCorrectable {
 		return Diagnosis{
 			Issue:      "System Healthy (Recoverable PCIe Errors Observed)",
@@ -196,6 +263,7 @@ func Correlate() Diagnosis {
 			"WiFi connected",
 			"IP assigned",
 			"Route present",
+			"Gateway reachable",
 			"Internet reachable",
 			"DNS working",
 		},
