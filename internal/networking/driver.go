@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"linistic/internal/utils"
 )
 
 type DriverState struct {
@@ -24,7 +25,7 @@ func GetDriverState() DriverState {
 
 	var state DriverState
 
-	lspci := strings.ToLower(run("lspci"))
+	lspci := strings.ToLower(utils.Run("lspci"))
 
 	if strings.Contains(lspci, "network") ||
 		strings.Contains(lspci, "wireless") ||
@@ -33,7 +34,7 @@ func GetDriverState() DriverState {
 		state.HardwarePresent = true
 	}
 
-	driverInfo := run("ethtool", "-i", "wlan0")
+	driverInfo := utils.Run("ethtool", "-i", "wlan0")
 
 	re := regexp.MustCompile(`driver:\s*(\S+)`)
 	match := re.FindStringSubmatch(driverInfo)
@@ -46,7 +47,7 @@ func GetDriverState() DriverState {
 
 	if state.DriverBound {
 
-		lsmod := run("lsmod")
+		lsmod := utils.Run("lsmod")
 
 		if strings.Contains(lsmod, state.DriverName) {
 			state.ModuleLoaded = true
@@ -54,7 +55,7 @@ func GetDriverState() DriverState {
 	}
 
 	kernelLogs := strings.ToLower(
-		run(
+		utils.Run(
 			"journalctl",
 			"-k",
 			"-n",

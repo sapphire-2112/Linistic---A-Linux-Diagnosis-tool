@@ -3,6 +3,7 @@ package networking
 import (
 	"fmt"
 	"strings"
+	"linistic/internal/utils"
 )
 
 type RFKillState struct {
@@ -14,7 +15,7 @@ type RFKillState struct {
 
 func GetRFKillState() RFKillState {
 
-	out := run("rfkill", "list")
+	out := utils.Run("rfkill", "list")
 
 	var state RFKillState
 

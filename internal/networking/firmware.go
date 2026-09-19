@@ -2,6 +2,7 @@ package networking
 
 import (
 	"strings"
+	"linistic/internal/utils"
 )
 
 type FirmwareFinding struct {
@@ -15,7 +16,7 @@ func AnalyzeFirmware() []FirmwareFinding {
 
 	var findings []FirmwareFinding
 
-	logs := run(
+	logs := utils.Run(
 		"journalctl",
 		"-k",
 		"-b",
@@ -97,10 +98,7 @@ func AnalyzeFirmware() []FirmwareFinding {
 			}
 		}
 
-		//------------------------------------------------
-		// WARNINGS
-		//------------------------------------------------
-
+		
 		if strings.Contains(line, "[Firmware Bug]") {
 
 			key := "Firmware_bug"

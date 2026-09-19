@@ -2,6 +2,7 @@ package networking
 
 import (
 	"strings"
+	"linistic/internal/utils"
 )
 
 type DHCPState struct {
@@ -27,7 +28,7 @@ func GetDHCPState() DHCPState {
 	}
 
 	logs := strings.ToLower(
-		run(
+		utils.Run(
 			"journalctl",
 			"-u",
 			"NetworkManager",

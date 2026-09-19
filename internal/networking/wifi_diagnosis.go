@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"linistic/internal/utils"
 )
 
 type NetworkState struct {
@@ -23,7 +24,7 @@ func GetCurrentNetworkState() NetworkState {
 	var state NetworkState
 
 
-	link := run("iw", "dev", "wlan0", "link")
+	link := utils.Run("iw", "dev", "wlan0", "link")
 
 	if strings.Contains(link, "Connected to") {
 		state.Connected = true
@@ -45,7 +46,7 @@ func GetCurrentNetworkState() NetworkState {
 	// IP Address
 	//-----------------------------------
 
-	ip := run("ip", "-4", "addr", "show", "wlan0")
+	ip := utils.Run("ip", "-4", "addr", "show", "wlan0")
 
 	if strings.Contains(ip, "inet ") {
 		state.IPAssigned = true
@@ -55,7 +56,7 @@ func GetCurrentNetworkState() NetworkState {
 	// Default Route
 	//-----------------------------------
 
-	route := run("ip", "route")
+	route := utils.Run("ip", "route")
 
 	if strings.Contains(route, "default via") {
 		state.DefaultRoute = true
@@ -110,7 +111,7 @@ func DiagnoseWiFi() {
 
 	if !state.Connected {
 
-		nm := run(
+		nm := utils.Run(
 			"journalctl",
 			"-u",
 			"NetworkManager",
@@ -119,7 +120,7 @@ func DiagnoseWiFi() {
 			"--no-pager",
 		)
 
-		kernel := run(
+		kernel := utils.Run(
 			"journalctl",
 			"-k",
 			"-n",

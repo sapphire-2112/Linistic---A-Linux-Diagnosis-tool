@@ -3,6 +3,7 @@ package networking
 import (
 	"regexp"
 	"strings"
+	"linistic/internal/utils"
 )
 
 type ARPState struct {
@@ -22,7 +23,7 @@ func GetARPState() ARPState {
 
 	var state ARPState
 
-	route := run("ip", "route", "show", "default")
+	route := utils.Run("ip", "route", "show", "default")
 
 	re := regexp.MustCompile(`default via (\S+)`)
 	match := re.FindStringSubmatch(route)
@@ -36,7 +37,7 @@ func GetARPState() ARPState {
 	state.GatewayIP = gateway
 	state.GatewayFound = true
 
-	neigh := run("ip", "neigh", "show", gateway)
+	neigh := utils.Run("ip", "neigh", "show", gateway)
 
 	if strings.TrimSpace(neigh) == "" {
 		return state
